@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Form Validation</title>
+    <style>
+        .error {
+            color: red;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .contactForm {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start; /* Align labels and input fields to the left */
+            margin-bottom: 10px;
+        }
+
+        .contactForm label {
+            width: 150px;
+            text-align: right;
+            padding-right: 10px;
+        }
+
+        .contactForm input[type="text"],
+        .contactForm input[type="email"],
+        .contactForm input[type="url"],
+        .contactForm textarea {
+            width: 100%;
+            margin-top: 5px; /* Add some top margin for spacing */
+        }
+
+        /* Style for error messages */
+        .error-message {
+            color: red;
+            font-size: 12px;
+            margin-left: 160px; /* Adjust margin to align with input fields */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Contact Form</h1>
+        <form id="contactForm" class="contactForm">
+            <div>
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name">
+                <span id="nameError" class="error-message"></span>
+            </div>
+            <div>
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email">
+                <span id="emailError" class="error-message"></span>
+            </div>
+            <div>
+                <label for="website">Website:</label>
+                <input type="url" id="website" name="website">
+                <span id="websiteError" class="error-message"></span>
+            </div>
+            <div>
+                <label for="message">Message:</label>
+                <textarea id="message" name="message"></textarea>
+                <span id="messageError" class="error-message"></span>
+            </div>
+            <button type="button" onclick="validateForm()">Submit</button>
+        </form>
+    </div>
+
+    <script>
+        function validateForm() {
+            const name = document.getElementById("name").value;
+            const email = document.getElementById("email").value;
+            const website = document.getElementById("website").value;
+            const message = document.getElementById("message").value;
+
+            // Reset error messages and styling
+            resetErrors();
+
+            // Collect all error messages
+            const errors = [];
+
+            // Name validation (should not be empty or contain special characters)
+            if (name.trim() === "" || /[^a-zA-Z\s]/.test(name)) {
+                displayError("nameError", "Invalid name");
+                errors.push("Invalid name");
+            }
+
+            // Email validation (should contain '@' symbol)
+            if (!email.includes("@")) {
+                displayError("emailError", "Invalid email");
+                errors.push("Invalid email");
+            }
+
+            // Website validation (should be a valid URL)
+            try {
+                new URL(website);
+            } catch (error) {
+                displayError("websiteError", "Invalid website URL");
+                errors.push("Invalid website URL");
+            }
+
+            // Message validation (should not be empty)
+            if (message.trim() === "") {
+                displayError("messageError", "Message cannot be empty");
+                errors.push("Message cannot be empty");
+            }
+
+            // Display all errors in parallel
+            if (errors.length === 0) {
+                // Form is valid, you can proceed with submission or other actions
+                alert("Form submitted successfully!");
+            }
+        }
+
+        function resetErrors() {
+            const errorElements = document.querySelectorAll(".error-message");
+            errorElements.forEach((errorElement) => {
+                errorElement.textContent = "";
+            });
+        }
+
+        function displayError(elementId, errorMessage) {
+            const errorElement = document.getElementById(elementId);
+            errorElement.textContent = errorMessage;
+        }
+    </script>
+</body>
+</html>
